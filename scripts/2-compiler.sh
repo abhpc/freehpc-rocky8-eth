@@ -22,13 +22,13 @@ cd /tmp
 # Install environment module
 if [ ! -d "$APP_DIR/modules" ] || [ -z "$(ls -A $APP_DIR/modules)" ]; then
     yum install tcsh tcl tcl-devel isl isl-devel -y
-    wget $SOFT_SERV/modules-5.3.1.tar.bz2 --no-check-certificate
-    tar -vxf modules-5.3.1.tar.bz2
-    cd modules-5.3.1/
+    wget $SOFT_SERV/modules-5.6.0.tar.bz2 --no-check-certificate
+    tar -vxf modules-5.6.0.tar.bz2
+    cd modules-5.6.0/
     ./configure --prefix=$APP_DIR/modules
     make && make install
     cd ..
-    rm -rf modules-5.3.1*
+    rm -rf modules-5.6.0*
 
     # Create directories for modulefiles
     mkdir -p $APP_DIR/modules/modulefiles/development
