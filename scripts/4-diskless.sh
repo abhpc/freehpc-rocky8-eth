@@ -1,6 +1,6 @@
 #! /bin/bash
 #=======================================================================#
-#                    ABHPC Basic Setup for Rocky Linux 8.10             #
+#                    FreeHPC Basic Setup for Rocky Linux 8.10           #
 #=======================================================================#
 
 # Load environment variables
@@ -169,11 +169,11 @@ if option arch = 00:06 {
 } else {
     filename "pxelinux.0";
 }
-class "ABHPC-Client" {
+class "FreeHPC-Client" {
   match if
   (substring(option vendor-class-identifier, 0, 9) = "PXEClient") or
   (substring(option vendor-class-identifier, 0, 9) = "Etherboot") or
-  (substring(option vendor-class-identifier, 0, 10) = "ABHPCClient") ;
+  (substring(option vendor-class-identifier, 0, 10) = "FreeHPCClient") ;
 }
 subnet $PXE_PRE.0 netmask 255.255.255.0 {
     option subnet-mask  255.255.255.0;
@@ -252,8 +252,8 @@ else
   set color_highlight=white/blue
 fi
 
-menuentry "Diskless ABHPC OS with Rocky 8.10 API" --id abhpc-client {
-  echo "Enter ABHPC..."
+menuentry "Diskless FreeHPC on Rocky 8.10" --id abhpc-client {
+  echo "Enter FreeHPC..."
   echo "Loading Linux kernel vmlinuz-pxe..."
   linux vmlinuz-pxe devfs=nomount drblthincli=off selinux=0 drbl_bootp=\$net_default_next_server nomodeset rd.driver.blacklist=nouveau nouveau.modeset=0
   echo "Loading initial ramdisk initrd-pxe.img..."
@@ -277,28 +277,27 @@ timeout 5
 prompt 0
 noescape 1
 MENU MARGIN 5
-MENU BACKGROUND abhpc.png
+MENU BACKGROUND freehpc.png
 
 
 say **********************************************
-say Welcome to ABHPC.
-say Advanced Computing Lab, CAEP.
-say http://www.abhpc.com
+say Welcome to FreeHPC.
+say http://www.freehpc.com
 say **********************************************
 
 ALLOWOPTIONS 1
 
-MENU TITLE ABHPC (http://www.abhpc.com)
+MENU TITLE FreeHPC (http://www.freehpc.com)
 
-label abhpc
+label freehpc
   MENU DEFAULT
-  MENU LABEL Diskless ABHPC OS with Rocky 8.10 API
+  MENU LABEL Diskless FreeHPC on Rocky Linux 8.10
   IPAPPEND 1
   kernel vmlinuz-pxe
   append initrd=initrd-pxe.img devfs=nomount drblthincli=off selinux=0 nomodeset blacklist=ast xdriver=vesa brokenmodules=ast rd.driver.blacklist=nouveau nouveau.modeset=0
   TEXT HELP
-  * ABHPC version: 2024b (C) 2024-2034, Xiaoyi Liu (xyliu@mechx.ac.cn)
-  * Disclaimer: ABHPC is a HPC kernel over single-layer RDMA network
+  * FreeHPC version: 2025R1 (C) 2025-2035, www.freehpc.com
+  * Disclaimer: FreeHPC is a free HPC solution based on openHPC
   ENDTEXT
 EOF
 
