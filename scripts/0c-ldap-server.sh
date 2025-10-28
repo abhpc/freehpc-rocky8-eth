@@ -23,8 +23,9 @@ yum remove -y podman* runc
 
 # configure yum source
 yum install -y yum-utils
-yum-config-manager  --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-sed -i 's+https://download.docker.com+https://mirrors.tuna.tsinghua.edu.cn/docker-ce+' /etc/yum.repos.d/docker-ce.repo
+yum-config-manager  --add-repo $SOFT_SERV/docker-ce.ustc.repo
+#yum-config-manager  --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+#sed -i 's+https://download.docker.com+https://mirrors.tuna.tsinghua.edu.cn/docker-ce+' /etc/yum.repos.d/docker-ce.repo
 
 # install docker
 yum install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
