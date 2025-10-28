@@ -12,8 +12,10 @@ yum -y install epel-release
 yum -y install dkms
 
 # Revise /etc/default/grub, generate new grub.cfg
-sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ rd.driver.blacklist=nouveau nouveau.modeset=0"/' /etc/default/grub
-sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ systemd.unified_cgroup_hierarchy=1"/' /etc/default/grub
+#sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ rd.driver.blacklist=nouveau nouveau.modeset=0"/' /etc/default/grub
+#sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ systemd.unified_cgroup_hierarchy=1"/' /etc/default/grub
+grubby --args="nouveau.modeset=0 rd.driver.blacklist=nouveau" --update-kernel=ALL
+grubby --args="systemd.unified_cgroup_hierarchy=1" --update-kernel=ALL
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
 # Disable nouveau
