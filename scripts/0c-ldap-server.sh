@@ -50,7 +50,7 @@ LDAP_DOMAIN=$(echo $LDAP_BASE|awk -F 'dc=' '{for(i=2; i<=NF; i++) {gsub(",", "."
 docker run -itd --name abhpcldap \
             --restart=always \
             -p 389:389 -p 636:636 \
-            -e LDAP_ORGANISATION="abhpc" \
+            -e LDAP_ORGANISATION="$LDAP_ORG" \
             -e LDAP_DOMAIN="$LDAP_DOMAIN" \
             -e LDAP_ADMIN_PASSWORD="$LDAP_PASS" \
             --network ldap-net --ip 172.20.1.2 \
