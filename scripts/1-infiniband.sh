@@ -1,6 +1,6 @@
 #! /bin/bash
 #=======================================================================#
-#                    FreeHPC Basic Setup for Rocky Linux 8.10           #
+#                  FreeHPC Basic Setup for Rocky Linux 8.10             #
 #=======================================================================#
 
 # Load environment variables
@@ -32,7 +32,8 @@ wget $SOFT_SERV/MLNX_OFED_LINUX-5.8-5.1.1.2-rhel8.9-x86_64.tgz
 tar -xf MLNX_OFED_LINUX-5.8-5.1.1.2-rhel8.9-x86_64.tgz
 cd MLNX_OFED_LINUX-5.8-5.1.1.2-rhel8.9-x86_64/
 yum install -y kernel-rpm-macros python36-devel createrepo chkconfig tcsh kernel-modules-extra tcl gcc-gfortran tk lsof
-./mlnxofedinstall --distro rhel8.9 --add-kernel-support --with-nfsrdma --without-fw-update --with-nvmf
+#./mlnxofedinstall --distro rhel8.9 --add-kernel-support --with-nfsrdma --without-fw-update --with-nvmf
+./mlnxofedinstall --distro rhel8.9 --add-kernel-support --with-nfsrdma --with-nvmf
 dracut -f
 
 # Configure Infiniband card
