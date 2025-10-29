@@ -79,8 +79,8 @@ cd /root/Admin/mac
 cat << EOF > push.conf
 #Setup for general
 [general]
-domain=abhpc
-nisdomain=abhpc
+domain=freehpc
+nisdomain=freehpc
 localswapfile=no
 client_init=text
 login_gdm_opt=
@@ -124,10 +124,8 @@ EOF
 drblpush -c push.conf <<< $'\n\n'
 
 # Generate static IP for the last eth
-PXE_IP=$(echo $MST_IP |awk -F. '{print $1"."$2"."$3+1"."$4}')
-ethpxe=$ETH_DEV
-cat << EOF > /etc/sysconfig/network-scripts/ifcfg-$ethpxe
-DEVICE=$ethpxe
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-$ETH_DEV
+DEVICE=$ETH_DEV
 TYPE="Ethernet"
 BOOTPROTO=static
 IPADDR=$PXE_IP
@@ -137,7 +135,7 @@ EOF
 service network restart
 
 # Generate DHCP service
-echo "DHCPDARGS=\"$ethpxe\"" > /etc/sysconfig/dhcpd
+echo "DHCPDARGS=\"$ETH_DEV\"" > /etc/sysconfig/dhcpd
 PXE_PRE=$(echo $PXE_IP | awk -F. '{print $1"."$2"."$3}')
 NET_PRE=$(echo $MST_IP | awk -F. '{print $1"."$2"."$3}')
 cat << EOF > /etc/dhcp/dhcpd.conf
@@ -145,9 +143,9 @@ default-lease-time                      300;
 max-lease-time                          300;
 option subnet-mask                      255.255.255.0;
 option domain-name-servers              $PXE_IP;
-option domain-name                      "abhpc";
+option domain-name                      "freehpc";
 ddns-update-style                       none;
-server-name                             abhpc;
+server-name                             freehpc;
 allow booting;
 allow bootp;
 option arch code 93 = unsigned integer 16;
@@ -219,11 +217,11 @@ EOF
 
 sh ifcfg-ib.sh
 
-wget $SOFT_SERV/abhpc.png -O /tftpboot/nbi_img/abhpc.png
+wget $SOFT_SERV/freehpc.png -O /tftpboot/nbi_img/freehpc.png
 rm -rf /tftpboot/nbi_img/drblwp.png
 
 cat << EOF > /opt/etc/grub-efi.cfg
-set default=abhpc-client
+set default=freehpc-client
 set timeout_style=menu
 set timeout=7
 set hidden_timeout_quiet=false
@@ -252,7 +250,7 @@ else
   set color_highlight=white/blue
 fi
 
-menuentry "Diskless FreeHPC on Rocky 8.10" --id abhpc-client {
+menuentry "Diskless FreeHPC on Rocky 8.10" --id freehpc-client {
   echo "Enter FreeHPC..."
   echo "Loading Linux kernel vmlinuz-pxe..."
   linux vmlinuz-pxe devfs=nomount drblthincli=off selinux=0 drbl_bootp=\$net_default_next_server nomodeset rd.driver.blacklist=nouveau nouveau.modeset=0
@@ -304,7 +302,7 @@ EOF
 \cp -Rf /opt/etc/pxelinux.cfg /tftpboot/nbi_img/pxelinux.cfg/default
 \cp -Rf /opt/etc/grub-efi.cfg /tftpboot/nbi_img/grub-efi.cfg/grub.cfg
 
-sed -i "s@DRBL@ABHPC@g" /etc/exports
+sed -i "s@DRBL@FreeHPC@g" /etc/exports
 
 # Generate ibpxe informarion
 image=$(ls /tftpboot/nbi_img/initrd-pxe.*.img |awk -F "/" '{print $NF}')
