@@ -112,6 +112,7 @@ done
 # No other SLURM jobs, purge all remaining processes of this user
 #
 pkill -KILL -U \$SLURM_UID
+rm -rf /tmp/*
 exit 0
 EOF
 chmod +x $SLM_INST/usrbin/epilog.sh
