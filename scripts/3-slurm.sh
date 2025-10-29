@@ -131,7 +131,7 @@ EOF
 
 cat << EOF > $SLM_INST/etc/partitions.conf
 # Partition
-PartitionName=AB Nodes=${CLI_PRE}[001-${SLM_NUM}] MaxTime=INFINITE State=UP MinNodes=1 MaxCPUsPerNode=48 PriorityTier=100 Default=YES OverSubscribe=NO
+PartitionName=FH Nodes=${CLI_PRE}[001-${SLM_NUM}] MaxTime=INFINITE State=UP PriorityTier=100 Default=YES OverSubscribe=NO
 EOF
 
 cat << EOF > $SLM_INST/etc/slurm.conf
@@ -184,9 +184,9 @@ Epilog=$SLM_INST/usrbin/epilog.sh
 
 # SCHEDULING
 SchedulerType=sched/backfill
-SelectType=select/linear
-#SelectType=select/cons_tres
-#SelectTypeParameters=CR_Core
+#SelectType=select/linear
+SelectType=select/cons_res
+SelectTypeParameters=CR_Core
 #GresTypes=gpu
 #FastSchedule=1
 
