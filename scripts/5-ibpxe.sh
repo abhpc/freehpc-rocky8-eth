@@ -37,12 +37,12 @@ if [ ! -f /root/Admin/mac/guid.txt ]; then
 fi
 
 # Create guid-ip.txt and dhcpd.conf files
-rm -rf /root/Admin/ibpxe/abhpc
-mkdir -p /root/Admin/ibpxe/abhpc
+rm -rf /root/Admin/ibpxe/freehpc
+mkdir -p /root/Admin/ibpxe/freehpc
 
 # Generate guid-ip.txt
-printf "00:00:00:00:00:00:00:00\t\t%s\t\tmaster\n" "$MST_IP" > /root/Admin/ibpxe/abhpc/guid-ip.txt
-awk -v pre=$IP_PRE '{printf "%s\t\t%s.%d\t\tn%03d\n", $0, pre, NR, NR;}' /root/Admin/mac/guid.txt >> /root/Admin/ibpxe/abhpc/guid-ip.txt
+printf "00:00:00:00:00:00:00:00\t\t%s\t\tmaster\n" "$MST_IP" > /root/Admin/ibpxe/freehpc/guid-ip.txt
+awk -v pre=$IP_PRE '{printf "%s\t\t%s.%d\t\tn%03d\n", $0, pre, NR, NR;}' /root/Admin/mac/guid.txt >> /root/Admin/ibpxe/freehpc/guid-ip.txt
 
 # Revise kernerl
 cd /root/Admin/ibpxe
@@ -56,4 +56,4 @@ fi
 
 tar -vxf rootfs-efi.tgz
 rm -rf rootfs-efi.tgz
-ibpxe -c abhpc/
+ibpxe -c freehpc/
