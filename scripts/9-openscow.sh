@@ -20,6 +20,7 @@ yum install -y $SOFT_SERV/turbovnc-3.1.2-20240808.x86_64.rpm
 # Download scow slurm adapter
 mkdir -p /opt/scow-slurm-adapter/config
 cd /opt/scow-slurm-adapter
+rm -rf scow-slurm-adapter
 wget $SOFT_SERV/scow-slurm-adapter
 chmod +x scow-slurm-adapter
 
