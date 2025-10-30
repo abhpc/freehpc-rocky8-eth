@@ -100,7 +100,7 @@ fi
 # Cluster configure
 mstname=`hostname`
 cat << EOF > clusters/$CLUSNAME.yml
-displayName: ABHPC
+displayName: FreeHPC
 
 loginNodes:
   - name: $mstname
@@ -126,12 +126,12 @@ service docker restart
  sed -i "s@unless-stopped@always@g" docker-compose.yml
 docker compose up -d
 
-# Add Group abhpc
+# Add Group freehpc
 cat << EOF > group.ldif
-dn: cn=abhpc,dc=abhpc,dc=com
+dn: cn=freehpc,dc=freehpc,dc=com
 objectClass: top
 objectClass: posixGroup
-cn: abhpc
+cn: freehpc
 gidNumber: 5000
 EOF
 ldapadd -x -D "cn=admin,$LDAP_BASE" -w "$LDAP_PASS" -f group.ldif
@@ -164,10 +164,10 @@ tuser=\$1
 sacctmgr -i delete user \$tuser
 
 # remove user in SCOW db
-docker exec -it ascow-db-1 bash -c "/usr/bin/mysql -u root -p@Abhpc%1234 -e \"use scow; delete from user where user_id='\$tuser'\" "
+docker exec -it ascow-db-1 bash -c "/usr/bin/mysql -u root -p@Freehpc%1234 -e \"use scow; delete from user where user_id='\$tuser'\" "
 
 # remove user in LDAP system
-ldapdelete -x -H ldap://$LDAP_SERV -D "cn=admin,dc=abhpc,dc=com" -w "$LDAP_PASS" "uid=\$tuser,dc=abhpc,dc=com"
+ldapdelete -x -H ldap://$LDAP_SERV -D "cn=admin,dc=freehpc,dc=com" -w "$LDAP_PASS" "uid=\$tuser,dc=freehpc,dc=com"
 EOF
 chmod +x $APP_DIR/bin/userdelss
 
@@ -205,8 +205,8 @@ sacctmgr -i delete account \$tacct
 
 
 # delete from user_account where account_id = (select id from account where account_name='myacct2');
-docker exec -it ascow-db-1 bash -c "/usr/bin/mysql -u root -p@Abhpc%1234 -e \"use scow; delete from user_account where account_id = (select id from account where account_name='\$tacct')\" "
-docker exec -it ascow-db-1 bash -c "/usr/bin/mysql -u root -p@Abhpc%1234 -e \"use scow; delete from account where account_name='\$tacct'\" "
+docker exec -it ascow-db-1 bash -c "/usr/bin/mysql -u root -p@Freehpc%1234 -e \"use scow; delete from user_account where account_id = (select id from account where account_name='\$tacct')\" "
+docker exec -it ascow-db-1 bash -c "/usr/bin/mysql -u root -p@Freehpc%1234 -e \"use scow; delete from account where account_name='\$tacct'\" "
 EOF
 chmod +x $APP_DIR/bin/acctdelss
 
@@ -220,7 +220,7 @@ show_help() {
     echo "This script deletes tenant in SCOW."
     echo
     echo "Tenant in SCOW can be deleted:"
-    docker exec -it ascow-db-1 bash -c "/usr/bin/mysql -u root -p@Abhpc%1234 -e \"use scow; select * from tenant\" "
+    docker exec -it ascow-db-1 bash -c "/usr/bin/mysql -u root -p@Freehpc%1234 -e \"use scow; select * from tenant\" "
 }
 
 # Check if the correct number of arguments is provided
@@ -234,9 +234,9 @@ fi
 tten=\$1
 
 # remove account assosited with tenant in SCOW db
-docker exec -it ascow-db-1 bash -c "/usr/bin/mysql -u root -p@Abhpc%1234 -e \"use scow; delete from account where tenant_id = (select id from tenant where name='\$tten')\" "
+docker exec -it ascow-db-1 bash -c "/usr/bin/mysql -u root -p@Freehpc%1234 -e \"use scow; delete from account where tenant_id = (select id from tenant where name='\$tten')\" "
 
 # remove tenant in SCOW db
-docker exec -it ascow-db-1 bash -c "/usr/bin/mysql -u root -p@Abhpc%1234 -e \"use scow; delete from tenant where name='\$tten' \" "
+docker exec -it ascow-db-1 bash -c "/usr/bin/mysql -u root -p@Freehpc%1234 -e \"use scow; delete from tenant where name='\$tten' \" "
 EOF
 chmod +x $APP_DIR/bin/tendelss
