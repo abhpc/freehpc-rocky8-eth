@@ -54,6 +54,7 @@ done
 \cp -Rf /opt/etc/hosts /etc/hosts
 rm -rf /tftpboot/node_root/bin/mlnx_interface_mgr.sh
 \cp -Rf /opt/etc/pxelinux.cfg /tftpboot/nbi_img/pxelinux.cfg/default
+\cp -Rf /opt/etc/grub-efi.cfg /tftpboot/nbi_img/grub-efi.cfg/grub.cfg
 EOF
 
 # Generate chrony.conf file
