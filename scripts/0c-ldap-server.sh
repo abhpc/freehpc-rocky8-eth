@@ -53,6 +53,7 @@ docker run -itd --name abhpcldap \
             -e LDAP_ORGANISATION="$LDAP_ORG" \
             -e LDAP_DOMAIN="$LDAP_DOMAIN" \
             -e LDAP_ADMIN_PASSWORD="$LDAP_PASS" \
+            -e LDAP_LOG_LEVEL="0" \
             --network ldap-net --ip 172.20.1.2 \
             osixia/openldap:1.5.0
 
