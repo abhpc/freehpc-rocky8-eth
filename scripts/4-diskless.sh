@@ -253,7 +253,7 @@ fi
 menuentry "Diskless FreeHPC on Rocky 8.10" --id freehpc-client {
   echo "Enter FreeHPC..."
   echo "Loading Linux kernel vmlinuz-pxe..."
-  linux vmlinuz-pxe devfs=nomount drblthincli=off selinux=0 drbl_bootp=\$net_default_next_server nomodeset rd.driver.blacklist=nouveau nouveau.modeset=0
+  linux vmlinuz-pxe devfs=nomount drblthincli=off selinux=0 drbl_bootp=\$net_default_next_server nomodeset rd.driver.blacklist=nouveau nouveau.modeset=0 systemd.unified_cgroup_hierarchy=1
   echo "Loading initial ramdisk initrd-pxe.img..."
   initrd initrd-pxe.img
 }
@@ -292,7 +292,7 @@ label freehpc
   MENU LABEL Diskless FreeHPC on Rocky Linux 8.10
   IPAPPEND 1
   kernel vmlinuz-pxe
-  append initrd=initrd-pxe.img devfs=nomount drblthincli=off selinux=0 nomodeset blacklist=ast xdriver=vesa brokenmodules=ast rd.driver.blacklist=nouveau nouveau.modeset=0
+  append initrd=initrd-pxe.img devfs=nomount drblthincli=off selinux=0 nomodeset blacklist=ast xdriver=vesa brokenmodules=ast rd.driver.blacklist=nouveau nouveau.modeset=0 systemd.unified_cgroup_hierarchy=1
   TEXT HELP
   * FreeHPC version: 2025R1 (C) 2025-2035, www.freehpc.com
   * Disclaimer: FreeHPC is a free HPC solution based on openHPC

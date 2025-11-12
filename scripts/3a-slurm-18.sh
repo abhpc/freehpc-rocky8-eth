@@ -1,6 +1,6 @@
 #! /bin/bash
 #=======================================================================#
-#                  FreeHPC Basic Setup for Rocky Linux 8.10             #
+#                    FreeHPC Basic Setup for Rocky Linux 8.10           #
 #=======================================================================#
 
 # Load environment variables
@@ -44,13 +44,13 @@ systemctl enable --now mariadb
 mysql -u root -e "use mysql; update user set password=password('$DBPASSWD') where user='root'; flush privileges;"
 mysql -u root -p$DBPASSWD -e "create database slurm; grant all privileges on slurm.* to 'slurm'@'localhost' identified by '$DBPASSWD'; flush privileges;"
 
-rm -rf slurm-25.11.0 slurm-25.11.0.tar.bz2
+rm -rf slurm-18.08.7 slurm-18.08.7.tar.bz2
 
-# Download Slurm 25.11.0
+# Download Slurm 18.08.7
 cd /tmp
-wget --no-check-certificate $SOFT_SERV/slurm-25.11.0.tar.bz2
-tar -xf slurm-25.11.0.tar.bz2
-cd slurm-25.11.0/
+wget --no-check-certificate $SOFT_SERV/slurm-18.08.7.tar.bz2
+tar -xf slurm-18.08.7.tar.bz2
+cd slurm-18.08.7/
 
 # Install slurm
 ln -s /usr/bin/python3.11 /usr/bin/python
@@ -67,7 +67,7 @@ sed -i '/^SBINDIR=/a ulimit -l unlimited' /etc/init.d/slurm
 \cp -Rf init.d.slurmdbd /etc/init.d/slurmdbd && chmod +x /etc/init.d/slurmdbd
 \cp -Rf slurmd.service /opt/etc/slurmd.service
 cd ../..
-rm -rf slurm-25.11.0 slurm-25.11.0.tar.bz2
+rm -rf slurm-18.08.7 slurm-18.08.7.tar.bz2
 
 # Configure Slurm
 cd $SLM_INST && mkdir etc log state
@@ -112,17 +112,13 @@ done
 # No other SLURM jobs, purge all remaining processes of this user
 #
 pkill -KILL -U \$SLURM_UID
+rm -rf /tmp/*
 exit 0
 EOF
 chmod +x $SLM_INST/usrbin/epilog.sh
 
 # Add slurm configurations
-cat << EOF > $SLM_INST/etc/cgroup.conf
-CgroupPlugin=cgroup/v2
-CgroupSlice=system.slice
-CgroupAutomount=yes
-ConstrainCores=yes
-EOF
+echo "CgroupAutomount=yes" > $SLM_INST/etc/cgroup.conf
 
 cat << EOF > $SLM_INST/etc/gres.conf
 # A Nodes
@@ -136,7 +132,7 @@ EOF
 
 cat << EOF > $SLM_INST/etc/partitions.conf
 # Partition
-PartitionName=FH Nodes=${CLI_PRE}[001-${SLM_NUM}] MaxTime=INFINITE State=UP MinNodes=1 MaxCPUsPerNode=48 PriorityTier=100 Default=YES OverSubscribe=NO
+PartitionName=FH Nodes=${CLI_PRE}[001-${SLM_NUM}] MaxTime=INFINITE State=UP PriorityTier=100 Default=YES OverSubscribe=NO
 EOF
 
 cat << EOF > $SLM_INST/etc/slurm.conf
@@ -190,7 +186,7 @@ Epilog=$SLM_INST/usrbin/epilog.sh
 # SCHEDULING
 SchedulerType=sched/backfill
 #SelectType=select/linear
-SelectType=select/cons_tres
+SelectType=select/cons_res
 SelectTypeParameters=CR_Core
 #GresTypes=gpu
 #FastSchedule=1
@@ -198,8 +194,6 @@ SelectTypeParameters=CR_Core
 # QOS factor
 PriorityType=priority/multifactor
 PriorityWeightQOS=100000
-PriorityWeightJobSize=10000
-PriorityFavorSmall=YES
 
 # CGROUP
 TaskPlugin=task/cgroup
@@ -214,7 +208,12 @@ SlurmdDebug=quiet
 SlurmdLogFile=/var/log/slurmd.log
 
 # JOBS
-JobCompType=jobcomp/none
+JobCompType=jobcomp/mysql
+JobCompHost=localhost
+JobCompLoc=slurm
+JobCompUser=slurm
+JobCompPass=$DBPASSWD
+JobCompPort=3306
 JobContainerType=job_container/none
 JobAcctGatherFrequency=30
 JobAcctGatherType=jobacct_gather/linux
@@ -273,7 +272,7 @@ chmod +x $SLM_INST/usrbin/slassoc
 cat << EOF > $SLM_INST/usrbin/slhist
 #! /bin/bash
 ARGS=\$*
-sacct -X -o "jobid%-6,jobname%-20,nodelist%-10,alloccpus,user,Submit%14,Elapsed%12,state%-9,workdir%-60" \$ARGS
+sacct -X -o "jobid%6,jobname%20,AllocCPUS,user,Submit%14,Elapsed%12,state%10,workdir%70" \$ARGS
 EOF
 chmod +x $SLM_INST/usrbin/slhist
 
